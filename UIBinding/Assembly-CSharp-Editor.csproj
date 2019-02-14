@@ -61,7 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\BaseBindingEditor.cs" />
     <Compile Include="Assets\Editor\PropertyBindingEditor.cs" />
+    <Compile Include="Assets\Editor\StringInListDrawer.cs" />
+    <Compile Include="Assets\Editor\TestInspectorEditor.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Tenadore/Desktop/Lab Safety Unity Project/UIBinding/UIBinding/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

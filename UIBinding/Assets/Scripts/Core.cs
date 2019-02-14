@@ -9,7 +9,10 @@ using System;
 public class Core : MonoBehaviour, INotifyPropertyChanged
 {
 
-    public List<GameObject> boundUIElements = new List<GameObject>();
+    public Core(){
+        PropertyChanged += UpdateBoundElements;
+    }
+    //public List<GameObject> boundUIElements = new List<GameObject>();
     private int number;
     public int Number {
         get {
@@ -23,39 +26,40 @@ public class Core : MonoBehaviour, INotifyPropertyChanged
            
         }
     }
-
-    private int number2;
-    public int Number2
+    private Color newColor;
+    public Color NewColor
     {
         get
         {
-            return number2;
+            return newColor;
         }
         set
         {
-            if (number2 == value) return;
-            number2 = value;
-            OnPropertyChanged("Number2");
+            if (newColor == value) return;
+            newColor = value;
+            OnPropertyChanged("NewColor");
 
 
         }
     }
-    private int number3;
-    public int Number3
+
+    private FontStyle newfontStyle;
+    public FontStyle NewFontStyle
     {
         get
         {
-            return number3;
+            return newfontStyle;
         }
         set
         {
-            if (number3 == value) return;
-            number3 = value;
-            OnPropertyChanged("Number3");
+            if (newfontStyle == value) return;
+            newfontStyle = value;
+            OnPropertyChanged("NewFontStyle");
 
 
         }
     }
+
     private string s1;
     public string S1
     {
@@ -93,67 +97,105 @@ public class Core : MonoBehaviour, INotifyPropertyChanged
 
 
     public event PropertyChangedEventHandler PropertyChanged;
+
     public virtual void OnPropertyChanged(string propertyName = null)
     {
-        try
-        {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        }
-        catch (Exception ex)
-        {
-            Debug.Log(ex);
-        }
+        PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public void GetBoundUiElements()
-    {
-        GameObject[] elements = GameObject.FindObjectsOfType<GameObject>();
-        foreach (var element in elements)
-        {
-            if (element.GetComponent<PropertyBinding>())
-            {
-                var binding = element.GetComponent<PropertyBinding>();
-                if (binding.Class == this.GetType().ToString())
-                {
-                    boundUIElements.Add(element);
-                }
-            }
-        };
-    }
 
-    public void UpdateUI(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    public void UpdateBoundElements(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        var elementsToUpdate = this.boundUIElements.Where(x => x.GetComponent<PropertyBinding>().Property == e.PropertyName).ToList();
-        if (elementsToUpdate.Count() > 0)
+        if (BindingController.GetElementsByProperty(e.PropertyName) != null)
         {
-            var uivalue = sender.GetType().GetProperty(e.PropertyName).GetValue(sender, null);
-            foreach (var element in elementsToUpdate)
+            foreach (var boundElement in BindingController.GetElementsByProperty(e.PropertyName))
             {
-                var bindingEl = element.GetComponent<PropertyBinding>();
+                var uivalue = sender.GetType().GetProperty(e.PropertyName).GetValue(sender, null);
+
+                var bindingEl = boundElement.GetComponent<PropertyBinding>();
                 switch (bindingEl.Type)
                 {
                     case "Text":
-                        element.GetComponent<Text>().text = replaceBoundStringElement(element.GetComponent<Text>().text, uivalue.ToString());
+                        UpdateTextComponent(bindingEl, uivalue);
                         break;
                     case "Image":
                         Sprite sprite = uivalue as Sprite;
-                        element.GetComponent<Image>().sprite = sprite;
+                        boundElement.GetComponent<Image>().sprite = sprite;
                         break;
                     default:
                         break;
                 }
-
-
-            }
+            } 
         }
 
     }
+
+
+
     public static string replaceBoundStringElement(string inputString, string value)
     {
         //if(inputString.Contains("{{bound}}"))
             //return inputString.Replace("{{bound}}", value);
         return "Object value : " + value;
+    }
+
+    /// <summary>
+    /// Update a property of the Text Componenent.
+    /// </summary>
+    /// <param name="targetElement">The element to update</param>
+    /// <param name="uivalue">The new value</param>
+    public void UpdateTextComponent(PropertyBinding targetElement, object uivalue) {
+        Text textComponent = targetElement.GetComponent<Text>();
+        switch (targetElement.Field.ToLower())
+        {
+            case "text":
+                try
+                {
+                    if (string.IsNullOrEmpty(uivalue.ToString()))
+                        Debug.LogError("Warning! String is null or empty");
+                    textComponent.text = replaceBoundStringElement(textComponent.text, uivalue.ToString());
+                }
+                catch (Exception e)
+                {
+
+                    Debug.LogError(e.ToString());
+                }
+                break;
+            case "color":
+                try
+                {
+                    textComponent.color = (Color)uivalue;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                break;
+            case "fontsize":
+                try
+                {
+                    textComponent.fontSize = (int)uivalue;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                break;
+            case "fontstyle":
+                try
+                {
+                    if ((int)uivalue > 3)
+                        Debug.LogError("Font style does not exist! Set with the (FontStyle) enum instead of (int).");
+                    textComponent.fontStyle = (FontStyle)uivalue;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }

@@ -61,14 +61,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\BaseModel.cs" />
+    <Compile Include="Assets\Scripts\Binding\BaseBinding.cs" />
     <Compile Include="Assets\Scripts\BindingController.cs" />
     <Compile Include="Assets\Scripts\Core.cs" />
-    <Compile Include="Assets\Scripts\GameObjectContainer.cs" />
-    <Compile Include="Assets\Scripts\GameObjectExtension.cs" />
+    <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\PropertyBinding.cs" />
     <Compile Include="Assets\Scripts\Singleton.cs" />
+    <Compile Include="Assets\Scripts\StringInList.cs" />
     <Compile Include="Assets\Scripts\TestClass.cs" />
+    <Compile Include="Assets\Scripts\TestInspector.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Tenadore/Desktop/Lab Safety Unity Project/UIBinding/UIBinding/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

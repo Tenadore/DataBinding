@@ -14,9 +14,8 @@ public class PropertyBinding : Core
     public string Property;
     [HideInInspector]
     public string Type;
-    
-
-
+    [HideInInspector]
+    public string Field;
 
     [HideInInspector]
     public int PropertyIndex;
@@ -24,26 +23,9 @@ public class PropertyBinding : Core
     public int ClassIndex;
     [HideInInspector]
     public int TypeIndex;
+    [HideInInspector]
+    public int FieldIndex;
 
-    public Sprite sprite;
-
-
-
-    private void Start()
-    {
-        BindingController.core.PropertyChanged += BindingController.core.UpdateUI;
-        BindingController.core.GetBoundUiElements();
-        BindingController.core.Number++;
-        BindingController.core.Number2 = 100;
-        BindingController.core.S1 = "Awesome";
-        BindingController.core.Sprite1 = sprite;
-}
-    void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.Space)) { Number = 50; }
-    }
-
-
-
+ 
 
 }
